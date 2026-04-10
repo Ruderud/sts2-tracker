@@ -504,6 +504,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var webView: WKWebView!
     var wsClient: WebSocketClient!
     var resizeHandler: ResizeHandler!
+    var statusItem: NSStatusItem!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         window = OverlayWindow()
@@ -526,18 +527,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         window.makeKeyAndOrderFront(nil)
 
-        // 메뉴바에 아이콘 없이 실행
         NSApp.setActivationPolicy(.accessory)
 
-        // 우클릭 메뉴
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "수동 스캔", action: #selector(manualScan), keyEquivalent: "s"))
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "투명도 높이기", action: #selector(moreTransparent), keyEquivalent: "-"))
-        menu.addItem(NSMenuItem(title: "투명도 낮추기", action: #selector(lessTransparent), keyEquivalent: "="))
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "종료", action: #selector(quit), keyEquivalent: "q"))
-        window.contentView?.menu = menu
+        // 상단 메뉴바 아이콘
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        if let button = statusItem.button {
+            button.image = NSImage(systemSymbolName: "suit.spade.fill", accessibilityDescription: "STS2 Tracker")
+            button.image?.size = NSSize(width: 16, height: 16)
+        }
+
+        let statusMenu = NSMenu()
+        statusMenu.addItem(NSMenuItem(title: "🔍 화면 재인식", action: #selector(manualScan), keyEquivalent: "s"))
+        statusMenu.addItem(NSMenuItem.separator())
+
+        let showItem = NSMenuItem(title: "오버레이 표시/숨기기", action: #selector(toggleOverlay), keyEquivalent: "o")
+        statusMenu.addItem(showItem)
+        statusMenu.addItem(NSMenuItem.separator())
+        statusMenu.addItem(NSMenuItem(title: "투명도 높이기", action: #selector(moreTransparent), keyEquivalent: "-"))
+        statusMenu.addItem(NSMenuItem(title: "투명도 낮추기", action: #selector(lessTransparent), keyEquivalent: "="))
+        statusMenu.addItem(NSMenuItem.separator())
+        statusMenu.addItem(NSMenuItem(title: "종료", action: #selector(quit), keyEquivalent: "q"))
+        statusItem.menu = statusMenu
+
+        // 우클릭 메뉴 (오버레이 창)
+        let contextMenu = NSMenu()
+        contextMenu.addItem(NSMenuItem(title: "수동 스캔", action: #selector(manualScan), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem.separator())
+        contextMenu.addItem(NSMenuItem(title: "종료", action: #selector(quit), keyEquivalent: ""))
+        window.contentView?.menu = contextMenu
+    }
+
+    @objc func toggleOverlay() {
+        if window.isVisible {
+            window.orderOut(nil)
+        } else {
+            window.makeKeyAndOrderFront(nil)
+        }
     }
 
     @objc func manualScan() {
