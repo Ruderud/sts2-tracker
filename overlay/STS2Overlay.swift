@@ -434,6 +434,7 @@ function render(data) {
                         <span class="card-score ${scoreClass}">${card.score.toFixed(1)}</span>
                     </div>
                     <div class="card-desc">${card.description.replace(/\\n/g, ' ')}</div>
+                    <div class="card-desc" style="color:#888;font-size:10px;margin-top:2px">${(card.reasons||[]).join(' · ')}</div>
                 </div>
             `;
         });

@@ -19,7 +19,7 @@ from screen_capture import (
     extract_card_regions,
     ocr_card_names,
 )
-from tracker import score_card
+from recommender import score_card as score_card_v2
 from utils import clean_description
 
 
@@ -60,7 +60,12 @@ class TrackerState:
             }
 
         recs = []
-        for card, match_pct, game_score in self.recommendations:
+        for item in self.recommendations:
+            if len(item) == 4:
+                card, match_pct, game_score, reasons = item
+            else:
+                card, match_pct, game_score = item
+                reasons = []
             recs.append({
                 "name": card["name"],
                 "id": card["id"],
@@ -71,6 +76,7 @@ class TrackerState:
                 "description": clean_description(card.get("description", "")),
                 "match_pct": round(match_pct * 100),
                 "score": game_score,
+                "reasons": reasons,
             })
 
         best_idx = -1
@@ -149,8 +155,8 @@ def tracking_loop():
                                 matches = fuzzy_match(det.ocr_text, tracker.cards_db, threshold=0.3)
                                 if matches:
                                     card, match_score = matches[0]
-                                    game_score = score_card(card, state)
-                                    recs.append((card, match_score, game_score))
+                                    game_score, reasons = score_card_v2(card, state, tracker.cards_db)
+                                    recs.append((card, match_score, game_score, reasons))
                             tracker.recommendations = recs
                         tracker.ocr_status = "준비 완료"
                     elif not is_card_screen and tracker.last_card_screen:
@@ -213,8 +219,8 @@ async def websocket_endpoint(websocket: WebSocket):
                                 matches = fuzzy_match(det.ocr_text, tracker.cards_db, threshold=0.3)
                                 if matches:
                                     card, match_score = matches[0]
-                                    game_score = score_card(card, state)
-                                    recs.append((card, match_score, game_score))
+                                    game_score, reasons = score_card_v2(card, state, tracker.cards_db)
+                                    recs.append((card, match_score, game_score, reasons))
                             tracker.recommendations = recs
                         tracker.ocr_status = "준비 완료"
                         await broadcast(tracker.to_dict())
