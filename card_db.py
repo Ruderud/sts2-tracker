@@ -2,8 +2,11 @@
 
 import json
 import os
+import re
 from difflib import SequenceMatcher
 from pathlib import Path
+
+_TAG_RE = re.compile(r"\[/?[a-z:0-9]+\]")
 
 DB_PATH = Path(__file__).parent / "data" / "cards_kor.json"
 
@@ -42,17 +45,29 @@ def fuzzy_match(query: str, cards: list[dict], threshold: float = 0.5) -> list[t
     results = []
     query_clean = query.strip().replace(" ", "")
     for card in cards:
-        # 이름 매칭 - 쿼리에 카드 이름이 포함되면 높은 점수
+        # 이름 매칭 - 쿼리 앞부분에 카드 이름이 포함되면 높은 점수
         name_clean = card["name"].strip().replace(" ", "")
         name_score = SequenceMatcher(None, query_clean, name_clean).ratio()
         if len(name_clean) >= 2 and name_clean in query_clean:
-            name_score = max(name_score, 0.95)
+            pos = query_clean.find(name_clean)
+            if len(name_clean) >= 4:
+                # 4글자 이상 이름: 쿼리 앞 절반에 있으면 높은 점수
+                if pos <= len(query_clean) // 2:
+                    name_score = max(name_score, 0.95)
+                else:
+                    name_score = max(name_score, 0.85)
+            elif len(name_clean) >= 3:
+                # 3글자 이름: 맨 앞 근처에만
+                if pos <= len(name_clean):
+                    name_score = max(name_score, 0.95)
+            else:
+                # 2글자 이름: 정확히 맨 앞에서 시작할 때만
+                if pos == 0:
+                    name_score = max(name_score, 0.95)
 
         # 설명 매칭 - 부분 문자열 및 슬라이딩 윈도우
         desc = (card.get("description") or "").replace(" ", "").replace("\n", "")
-        # [gold], [star:N] 같은 태그 제거
-        import re
-        desc_plain = re.sub(r"\[/?[a-z:0-9]+\]", "", desc)
+        desc_plain = _TAG_RE.sub("", desc)
         desc_score = 0.0
         if len(query_clean) >= 4 and len(desc_plain) > 0:
             # 쿼리가 설명에 포함
