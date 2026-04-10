@@ -51,45 +51,158 @@ def capture_window(window_id: int) -> np.ndarray | None:
 
 
 def detect_card_reward_screen(img: np.ndarray) -> bool:
-    """카드 보상 화면인지 감지 (배너 영역 색상 패턴)."""
+    """카드 보상 화면인지 감지 (배너 영역 색상 패턴).
+
+    해상도 변화에 대응하기 위해 y=22-36% 범위를 슬라이딩 윈도우로 탐색.
+    """
     h, w = img.shape[:2]
-    # 배너 "카드를 선택하세요"는 y=29-33%, x=30-70% 영역
-    banner = img[int(h * 0.29):int(h * 0.33), int(w * 0.3):int(w * 0.7)]
-    hsv = cv2.cvtColor(banner, cv2.COLOR_BGR2HSV)
-    # 갈색/베이지 배너 감지 (H=10-30, S=30+, V=100+)
-    mask = cv2.inRange(hsv, (5, 30, 80), (40, 255, 255))
-    ratio = np.count_nonzero(mask) / mask.size
-    return ratio > 0.10
+    # 배너 "카드를 선택하세요"는 해상도에 따라 y 위치가 달라짐
+    # y=22-36% 범위에서 4% 높이 윈도우를 슬라이딩하며 탐색
+    x1, x2 = int(w * 0.3), int(w * 0.7)
+    for y_pct in (0.27, 0.29, 0.25, 0.31, 0.23, 0.33):
+        y1 = int(h * y_pct)
+        y2 = int(h * (y_pct + 0.04))
+        banner = img[y1:y2, x1:x2]
+        hsv = cv2.cvtColor(banner, cv2.COLOR_BGR2HSV)
+        # 갈색/베이지 배너 감지 (H=5-40, S=30+, V=80+)
+        mask = cv2.inRange(hsv, (5, 30, 80), (40, 255, 255))
+        ratio = np.count_nonzero(mask) / mask.size
+        if ratio > 0.15:
+            return True
+    return False
+
+
+def detect_combat_screen(img: np.ndarray) -> bool:
+    """전투 화면인지 감지 (End Turn 버튼 영역 + 에너지 오브 영역).
+
+    End Turn 버튼: 우하단 (x=82-95%, y=82-93%) - 밝은 베이지/골드 영역
+    에너지 오브: 좌하단 (x=3-10%, y=78-90%) - 밝은 원형 영역
+    둘 중 하나라도 감지되면 전투 화면으로 판단.
+    """
+    h, w = img.shape[:2]
+
+    # End Turn 버튼 영역 감지 (우하단)
+    end_turn = img[int(h * 0.82):int(h * 0.93), int(w * 0.82):int(w * 0.95)]
+    hsv_btn = cv2.cvtColor(end_turn, cv2.COLOR_BGR2HSV)
+    # 밝은 베이지/골드 버튼 (H=10-45, S=30+, V=120+)
+    mask_btn = cv2.inRange(hsv_btn, (10, 30, 120), (45, 255, 255))
+    btn_ratio = np.count_nonzero(mask_btn) / max(mask_btn.size, 1)
+
+    # 에너지 오브 영역 감지 (좌하단)
+    energy_orb = img[int(h * 0.78):int(h * 0.90), int(w * 0.03):int(w * 0.10)]
+    hsv_orb = cv2.cvtColor(energy_orb, cv2.COLOR_BGR2HSV)
+    # 밝은 에너지 오브 (높은 밝기, 낮은 채도 = 흰색/밝은 색)
+    mask_orb = cv2.inRange(hsv_orb, (0, 0, 160), (180, 80, 255))
+    orb_ratio = np.count_nonzero(mask_orb) / max(mask_orb.size, 1)
+
+    return btn_ratio > 0.05 or orb_ratio > 0.08
+
+
+def _find_card_columns(img: np.ndarray) -> list[tuple[float, float]]:
+    """밝기 프로파일로 카드 x 범위를 동적 탐지."""
+    h, w = img.shape[:2]
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # y=35-70% 영역의 열 평균 밝기
+    strip = gray[int(h * 0.35):int(h * 0.70), :]
+    col_means = strip.mean(axis=0)
+
+    # 이동 평균으로 스무딩
+    kernel = np.ones(15) / 15
+    smooth = np.convolve(col_means, kernel, mode="same")
+
+    bg_level = np.median(smooth)
+    threshold = bg_level + 20
+    bright = smooth > threshold
+
+    # 밝은 구간 찾기
+    diff = np.diff(bright.astype(int))
+    starts = np.where(diff == 1)[0]
+    ends = np.where(diff == -1)[0]
+    if bright[0]:
+        starts = np.insert(starts, 0, 0)
+    if bright[-1]:
+        ends = np.append(ends, len(bright) - 1)
+
+    min_width = w * 0.05
+    columns = []
+    for s, e in zip(starts, ends):
+        if e - s > min_width:
+            columns.append((s / w, e / w))
+
+    return columns
+
+
+def _find_card_rows(img: np.ndarray) -> tuple[float, float]:
+    """밝기 프로파일로 카드 y 범위를 동적 탐지."""
+    h, w = img.shape[:2]
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # x=25-75% 영역의 행 평균 밝기
+    strip = gray[:, int(w * 0.25):int(w * 0.75)]
+    row_means = strip.mean(axis=1)
+
+    kernel = np.ones(10) / 10
+    smooth = np.convolve(row_means, kernel, mode="same")
+
+    bg_level = np.percentile(smooth, 30)
+    threshold = bg_level + 20
+    bright = smooth > threshold
+
+    diff = np.diff(bright.astype(int))
+    starts = np.where(diff == 1)[0]
+    ends = np.where(diff == -1)[0]
+    if bright[0]:
+        starts = np.insert(starts, 0, 0)
+    if bright[-1]:
+        ends = np.append(ends, len(bright) - 1)
+
+    # 가장 높이가 큰 밝은 구간 = 카드 영역
+    best = (0.34, 0.70)  # fallback
+    max_height = 0
+    for s, e in zip(starts, ends):
+        height = e - s
+        if height > max_height and s / h > 0.25:  # 상단 UI 제외
+            max_height = height
+            best = (s / h, e / h)
+
+    return best
 
 
 def extract_card_regions(img: np.ndarray) -> list[np.ndarray]:
-    """카드 보상 화면에서 개별 카드 영역 추출."""
+    """카드 보상 화면에서 개별 카드 영역 추출 (동적 밝기 분석)."""
     h, w = img.shape[:2]
-    # 카드 위치 (밝기 프로파일 기반)
-    card_bounds = [
-        (0.24, 0.34, 0.40, 0.68),  # card 1
-        (0.42, 0.34, 0.58, 0.68),  # card 2
-        (0.59, 0.34, 0.75, 0.68),  # card 3
-    ]
+
+    columns = _find_card_columns(img)
+    y1_pct, y2_pct = _find_card_rows(img)
+
+    # 카드 3장이 감지되지 않으면 폴백
+    if len(columns) != 3:
+        columns = [(0.26, 0.39), (0.44, 0.56), (0.61, 0.73)]
+
     regions = []
-    for x1, y1, x2, y2 in card_bounds:
-        crop = img[int(h * y1):int(h * y2), int(w * x1):int(w * x2)]
+    for x1_pct, x2_pct in columns:
+        crop = img[int(h * y1_pct):int(h * y2_pct), int(w * x1_pct):int(w * x2_pct)]
         regions.append(crop)
     return regions
 
 
 def extract_card_name_regions(img: np.ndarray) -> list[np.ndarray]:
-    """카드 이름 배너 영역만 추출 (OCR 정확도 향상용)."""
+    """카드 이름 배너 영역만 추출 (OCR 정확도 향상용, 동적 감지)."""
     h, w = img.shape[:2]
-    # 카드 이름 리본: y=33-36%
-    name_bounds = [
-        (0.27, 0.33, 0.40, 0.37),  # card 1 name
-        (0.44, 0.33, 0.57, 0.37),  # card 2 name
-        (0.61, 0.33, 0.74, 0.37),  # card 3 name
-    ]
+    columns = _find_card_columns(img)
+
+    if len(columns) != 3:
+        columns = [(0.26, 0.39), (0.44, 0.56), (0.61, 0.73)]
+
+    # 이름 리본은 카드 본체 상단 직전 ~4% 높이 영역
+    card_y1, _ = _find_card_rows(img)
+    name_y_start = card_y1 - 0.04
+    name_y_end = card_y1
+
     regions = []
-    for x1, y1, x2, y2 in name_bounds:
-        crop = img[int(h * y1):int(h * y2), int(w * x1):int(w * x2)]
+    for x1_pct, x2_pct in columns:
+        crop = img[int(h * name_y_start):int(h * name_y_end), int(w * x1_pct):int(w * x2_pct)]
         regions.append(crop)
     return regions
 

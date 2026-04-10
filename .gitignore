@@ -5,3 +5,4 @@ __pycache__/
 /tmp/
 *.egg-info/
 .omc/
+overlay/STS2Overlay
