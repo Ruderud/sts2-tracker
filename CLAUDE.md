@@ -19,8 +19,8 @@ tracker.py       - 메인 루프 (세이브 감시 + 캡처 + 추천)
 ```
 
 ## 게임 경로
-- 앱: `/Users/<USER>/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/`
-- 세이브: `~/Library/Application Support/SlayTheSpire2/steam/STEAM_USER_ID/`
+- 앱: `~/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/`
+- 세이브: `~/Library/Application Support/SlayTheSpire2/steam/<STEAM_ID>/` (자동 탐지)
 - modded 세이브: 위 경로 + `modded/profile1/saves/current_run.save`
 
 ## 실행

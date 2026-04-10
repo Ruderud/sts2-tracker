@@ -4,9 +4,18 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-SAVE_DIR = Path.home() / "Library/Application Support/SlayTheSpire2/steam/STEAM_USER_ID"
-MODDED_SAVE = SAVE_DIR / "modded/profile1/saves/current_run.save"
-VANILLA_SAVE = SAVE_DIR / "profile1/saves/current_run.save"
+STS2_DATA_DIR = Path.home() / "Library/Application Support/SlayTheSpire2"
+
+
+def _find_steam_user_dir() -> Path | None:
+    """Steam 유저 디렉토리 자동 탐지."""
+    steam_dir = STS2_DATA_DIR / "steam"
+    if not steam_dir.exists():
+        return None
+    for user_dir in steam_dir.iterdir():
+        if user_dir.is_dir() and user_dir.name.isdigit():
+            return user_dir
+    return None
 
 
 @dataclass
@@ -36,8 +45,13 @@ class RunState:
 
 
 def find_save_file() -> Path | None:
-    """현재 런 세이브 파일 찾기. modded 우선."""
-    for path in [MODDED_SAVE, VANILLA_SAVE]:
+    """현재 런 세이브 파일 찾기. modded 우선, Steam 유저 자동 탐지."""
+    user_dir = _find_steam_user_dir()
+    if user_dir is None:
+        return None
+    # modded 우선, 그 다음 vanilla. 여러 프로필 탐색.
+    for subdir in ["modded/profile1", "profile1", "modded/profile2", "profile2"]:
+        path = user_dir / subdir / "saves" / "current_run.save"
         if path.exists():
             return path
     return None
