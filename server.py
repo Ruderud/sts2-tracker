@@ -16,10 +16,12 @@ from screen_capture import (
     find_game_window,
     capture_window,
     detect_card_reward_screen,
+    detect_combat_screen,
     extract_card_regions,
     ocr_card_names,
 )
 from recommender import score_card as score_card_v2
+from combat_advisor import generate_combat_advice
 from utils import clean_description
 
 
@@ -34,6 +36,8 @@ class TrackerState:
         self.ocr_reader = None
         self.last_mtime: float = 0.0
         self.last_card_screen: bool = False
+        self.last_combat_screen: bool = False
+        self.combat_advice: list[str] = []
         self.clients: list[WebSocket] = []
         self._tracking = True
 
@@ -87,6 +91,7 @@ class TrackerState:
             "run": run_data,
             "recommendations": recs,
             "best_idx": best_idx,
+            "combat_advice": self.combat_advice,
             "ocr_status": self.ocr_status,
             "connected": self.window_id is not None,
         }
@@ -162,6 +167,22 @@ def tracking_loop():
                     elif not is_card_screen and tracker.last_card_screen:
                         tracker.recommendations = []
                     tracker.last_card_screen = is_card_screen
+
+                    # 전투 화면 감지 + 조언 생성
+                    if not is_card_screen:
+                        is_combat = detect_combat_screen(img)
+                        if is_combat and not tracker.last_combat_screen:
+                            state = tracker.run_state
+                            if state:
+                                tracker.combat_advice = generate_combat_advice(
+                                    state, tracker.cards_db
+                                )
+                        elif not is_combat and tracker.last_combat_screen:
+                            tracker.combat_advice = []
+                        tracker.last_combat_screen = is_combat
+                    else:
+                        tracker.last_combat_screen = False
+                        tracker.combat_advice = []
 
             time.sleep(1.5)
         except Exception as e:

@@ -354,6 +354,36 @@ body {
     border-color: rgba(251,191,36,0.3);
     color: #fbbf24;
 }
+
+/* Combat Advice */
+.combat-panel {
+    background: rgba(5, 15, 20, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+}
+.combat-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #38bdf8;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+.combat-tip {
+    font-size: 12px;
+    color: #e0e0e0;
+    padding: 5px 8px;
+    margin-bottom: 3px;
+    background: rgba(56,189,248,0.06);
+    border-left: 2px solid rgba(56,189,248,0.4);
+    border-radius: 4px;
+    line-height: 1.4;
+}
 </style>
 </head>
 <body>
@@ -390,29 +420,8 @@ function connect() {
 function render(data) {
     let html = '';
 
-    if (data.run) {
-        const r = data.run;
-        const hpPct = r.current_hp / r.max_hp;
-        const hpClass = hpPct > 0.6 ? 'hp-high' : hpPct > 0.3 ? 'hp-mid' : 'hp-low';
-
-        html += `<div class="panel">
-            <div class="header">
-                <span class="character">${r.character}</span>
-                <span class="hp ${hpClass}">${r.current_hp}/${r.max_hp} HP</span>
-            </div>
-            <div class="meta">Act ${r.act} · Floor ${r.floor} · Gold ${r.gold} · ${r.seed}</div>
-            <div class="section-title">Deck (${r.deck_size})</div>
-            <div class="deck-grid">`;
-        for (const card of r.deck) {
-            const countStr = card.count > 1 ? `<span class="count"> ×${card.count}</span>` : '';
-            html += `<span class="deck-card">${card.name}${countStr}</span>`;
-        }
-        html += `</div>
-            <div class="section-title">Relics</div>
-            <div class="relics">${r.relics.join(' · ')}</div>
-        </div>`;
-    } else {
-        html += '<div class="waiting">' + (data.connected ? '런 대기 중...' : '게임을 찾는 중...') + '</div>';
+    if (!data.run && !data.connected) {
+        html += '<div class="waiting">게임을 찾는 중...</div>';
     }
 
     // Recommendations
@@ -443,6 +452,16 @@ function render(data) {
             const best = data.recommendations[data.best_idx];
             html += `<div class="pick-label">★ ${best.name}</div>`;
         }
+        html += '</div>';
+    }
+
+    // Combat Advice
+    if (data.combat_advice && data.combat_advice.length > 0) {
+        html += '<div class="combat-panel">';
+        html += '<div class="combat-title">\\u2694 \\uC804\\uD22C \\uC870\\uC5B8</div>';
+        data.combat_advice.forEach(tip => {
+            html += '<div class="combat-tip">' + tip + '</div>';
+        });
         html += '</div>';
     }
 
