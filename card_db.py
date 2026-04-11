@@ -37,14 +37,23 @@ def build_name_index(cards: list[dict]) -> dict[str, dict]:
     return {card["name"]: card for card in cards}
 
 
-def fuzzy_match(query: str, cards: list[dict], threshold: float = 0.5) -> list[tuple[dict, float]]:
+def fuzzy_match(query: str, cards: list[dict], threshold: float = 0.5, character: str = "") -> list[tuple[dict, float]]:
     """OCR 텍스트를 카드 이름+설명과 매칭.
 
+    character가 지정되면 해당 캐릭터 + colorless/event/status/curse/token 카드만 매칭.
     Returns: [(card_data, score)] sorted by score desc.
     """
+    ALWAYS_ALLOWED = {"colorless", "event", "status", "curse", "token", "quest"}
+    char_filter = character.lower() if character else ""
+
     results = []
     query_clean = query.strip().replace(" ", "")
     for card in cards:
+        # 캐릭터 필터: 다른 캐릭터 카드 제외
+        if char_filter:
+            card_color = (card.get("color") or "").lower()
+            if card_color not in ALWAYS_ALLOWED and card_color != char_filter:
+                continue
         # 이름 매칭 - 쿼리 앞부분에 카드 이름이 포함되면 높은 점수
         name_clean = card["name"].strip().replace(" ", "")
         name_score = SequenceMatcher(None, query_clean, name_clean).ratio()

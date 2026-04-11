@@ -1,0 +1,583 @@
+{
+  "THE_LEGENDS_WERE_TRUE.INITIAL": {
+    "__meta__": {
+      "event_id": "THE_LEGENDS_WERE_TRUE",
+      "event_name": "전설은 사실이었어",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "NAB_THE_MAP": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "SLOWLY_FIND_AN_EXIT": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "AROMA_OF_CHAOS.INITIAL": {
+    "__meta__": {
+      "event_id": "AROMA_OF_CHAOS",
+      "event_name": "혼돈의 향기",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "LET_GO": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "MAINTAIN_CONTROL": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "TABLET_OF_TRUTH.INITIAL": {
+    "__meta__": {
+      "event_id": "TABLET_OF_TRUTH",
+      "event_name": "진리의 석판",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "DECIPHER_1": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "SMASH": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "DOLL_ROOM.INITIAL": {
+    "__meta__": {
+      "event_id": "DOLL_ROOM",
+      "event_name": "인형의 방",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "RANDOM": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "TAKE_SOME_TIME": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "EXAMINE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "WELCOME_TO_WONGOS.INITIAL": {
+    "__meta__": {
+      "event_id": "WELCOME_TO_WONGOS",
+      "event_name": "웡고스에 오신 것을 환영합니다",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "BARGAIN_BIN": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "LEAVE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "POTION_COURIER.INITIAL": {
+    "__meta__": {
+      "event_id": "POTION_COURIER",
+      "event_name": "포션 배달원",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "GRAB_POTIONS": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "RANSACK": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "AMALGAMATOR.INITIAL": {
+    "__meta__": {
+      "event_id": "AMALGAMATOR",
+      "event_name": "융합자",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "COMBINE_STRIKES": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "COMBINE_DEFENDS": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "TINKER_TIME.CHOOSE_RIDER": {
+    "__meta__": {
+      "event_id": "TINKER_TIME",
+      "event_name": "땜질 시간",
+      "page_id": "CHOOSE_RIDER",
+      "samples": 1.0
+    },
+    "SAPPING": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "VIOLENCE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "CHOKING": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "ENERGIZED": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "WISDOM": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "CHAOS": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "EXPERTISE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "CURIOUS": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "IMPROVEMENT": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "TINKER_TIME.CHOOSE_CARD_TYPE": {
+    "__meta__": {
+      "event_id": "TINKER_TIME",
+      "event_name": "땜질 시간",
+      "page_id": "CHOOSE_CARD_TYPE",
+      "samples": 1.0
+    },
+    "ATTACK": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "SKILL": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "POWER": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "THIS_OR_THAT.INITIAL": {
+    "__meta__": {
+      "event_id": "THIS_OR_THAT",
+      "event_name": "이거 아님 저거?",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "PLAIN": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "ORNATE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "ROOM_FULL_OF_CHEESE.INITIAL": {
+    "__meta__": {
+      "event_id": "ROOM_FULL_OF_CHEESE",
+      "event_name": "치즈로 가득한 방",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "GORGE": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "SEARCH": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "ENDLESS_CONVEYOR.ALL": {
+    "__meta__": {
+      "event_id": "ENDLESS_CONVEYOR",
+      "event_name": "무한의 컨베이어",
+      "page_id": "ALL",
+      "samples": 4.0
+    },
+    "LOCKED": {
+      "offers": 4,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "CAVIAR": {
+      "offers": 4,
+      "picks": 1,
+      "pick_rate": 0.25,
+      "pairwise": 0.2286,
+      "score": 2.01,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "CLAM_ROLL": {
+      "offers": 4,
+      "picks": 1,
+      "pick_rate": 0.25,
+      "pairwise": 0.2286,
+      "score": 2.01,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "FRIED_EEL": {
+      "offers": 4,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "GOLDEN_FYSH": {
+      "offers": 4,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "JELLY_LIVER": {
+      "offers": 4,
+      "picks": 1,
+      "pick_rate": 0.25,
+      "pairwise": 0.2286,
+      "score": 2.01,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "SEAPUNK_SALAD": {
+      "offers": 4,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "SPICY_SNAPPY": {
+      "offers": 4,
+      "picks": 1,
+      "pick_rate": 0.25,
+      "pairwise": 0.2286,
+      "score": 2.01,
+      "confidence": 0.6811,
+      "samples": 4.0
+    },
+    "SUSPICIOUS_CONDIMENT": {
+      "offers": 4,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.6811,
+      "samples": 4.0
+    }
+  },
+  "STONE_OF_ALL_TIME.INITIAL": {
+    "__meta__": {
+      "event_id": "STONE_OF_ALL_TIME",
+      "event_name": "영원의 돌",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "LIFT": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "PUSH": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "INFESTED_AUTOMATON.INITIAL": {
+    "__meta__": {
+      "event_id": "INFESTED_AUTOMATON",
+      "event_name": "감염된 자동인형",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "STUDY": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "TOUCH_CORE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "HUNGRY_FOR_MUSHROOMS.INITIAL": {
+    "__meta__": {
+      "event_id": "HUNGRY_FOR_MUSHROOMS",
+      "event_name": "버섯이 먹고 싶어",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "BIG_MUSHROOM": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "FRAGRANT_MUSHROOM": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "SELF_HELP_BOOK.INITIAL": {
+    "__meta__": {
+      "event_id": "SELF_HELP_BOOK",
+      "event_name": "자기계발서",
+      "page_id": "INITIAL",
+      "samples": 1.0
+    },
+    "READ_THE_BACK": {
+      "offers": 1,
+      "picks": 1,
+      "pick_rate": 1.0,
+      "pairwise": 1.0,
+      "score": 5.7,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "READ_PASSAGE": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    },
+    "READ_ENTIRE_BOOK": {
+      "offers": 1,
+      "picks": 0,
+      "pick_rate": 0.0,
+      "pairwise": 0.0,
+      "score": 0.9,
+      "confidence": 0.2485,
+      "samples": 1.0
+    }
+  },
+  "__build_meta__": {
+    "target_build": "v0.100.0",
+    "included_builds": [
+      "v0.100.0"
+    ],
+    "legacy_builds": [
+      "v0.98.2",
+      "v0.98.3",
+      "v0.99.1"
+    ],
+    "strategy": "latest_only"
+  }
+}

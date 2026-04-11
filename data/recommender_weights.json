@@ -1,0 +1,19 @@
+{
+  "default_base": 2.0324417494173184,
+  "damage_scale": 0.02835450152166705,
+  "block_scale": 0.04110623132727339,
+  "draw_scale": 0.399261734309465,
+  "power_scale": 0.42137652119058455,
+  "star_scale": 0.5355747577656108,
+  "thin_scale": 0.8676742290749302,
+  "zero_cost_bonus": 0.2485295905708123,
+  "high_cost_penalty": 0.34304919981112475,
+  "deck_penalty_scale": 0.06618458367702398,
+  "duplicate_penalty": 0.20393674206936743,
+  "duplicate_plus_penalty": 0.5956125794103775,
+  "act1_attack_bonus": 0.8037222423484938,
+  "act1_power_bonus": 0.3413677064218581,
+  "skip_base": 0.9927527141456495,
+  "skip_deck_scale": 0.08607894862798637,
+  "skip_thin_bonus": 0.06980979708443721
+}

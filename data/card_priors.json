@@ -1,0 +1,179 @@
+{
+  "BALL_LIGHTNING": {
+    "score": 3.094,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 2.0,
+    "rating": 1618.52
+  },
+  "CHARGE_BATTERY": {
+    "score": 2.5481,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 1.0,
+    "rating": 1538.52
+  },
+  "GO_FOR_THE_EYES": {
+    "score": 2.2258,
+    "confidence": 0.6726,
+    "offers": 4.0,
+    "picks": 1.0,
+    "rating": 1477.03
+  },
+  "COMPACT": {
+    "score": 2.3422,
+    "confidence": 0.6064,
+    "offers": 3.0,
+    "picks": 1.0,
+    "rating": 1497.22
+  },
+  "BOOST_AWAY": {
+    "score": 1.7648,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1436.25
+  },
+  "HOTFIX": {
+    "score": 3.0886,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 2.0,
+    "rating": 1616.31
+  },
+  "BEAM_CELL": {
+    "score": 1.7687,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1437.85
+  },
+  "BUFFER": {
+    "score": 1.7696,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1438.22
+  },
+  "SWEEPING_BEAM": {
+    "score": 1.7719,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1439.17
+  },
+  "INVOKE": {
+    "score": 2.2662,
+    "confidence": 0.7197,
+    "offers": 5.0,
+    "picks": 3.0,
+    "rating": 1596.63
+  },
+  "DEATH_MARCH": {
+    "score": 2.16,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 1.0,
+    "rating": 1531.74
+  },
+  "PULL_FROM_BELOW": {
+    "score": 1.7722,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1439.33
+  },
+  "POKE": {
+    "score": 2.1751,
+    "confidence": 0.755,
+    "offers": 6.0,
+    "picks": 3.0,
+    "rating": 1589.38
+  },
+  "REAVE": {
+    "score": 1.9729,
+    "confidence": 0.6064,
+    "offers": 3.0,
+    "picks": 1.0,
+    "rating": 1498.25
+  },
+  "SPUR": {
+    "score": 1.7685,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1437.79
+  },
+  "FLATTEN": {
+    "score": 2.1675,
+    "confidence": 0.6726,
+    "offers": 4.0,
+    "picks": 2.0,
+    "rating": 1567.89
+  },
+  "WISP": {
+    "score": 2.1481,
+    "confidence": 0.6726,
+    "offers": 4.0,
+    "picks": 2.0,
+    "rating": 1559.82
+  },
+  "SCULPTING_STRIKE": {
+    "score": 1.7699,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1438.35
+  },
+  "VEILPIERCER": {
+    "score": 1.775,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1440.47
+  },
+  "RATTLE": {
+    "score": 2.1543,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 1.0,
+    "rating": 1529.4
+  },
+  "BLIGHT_STRIKE": {
+    "score": 1.7671,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1437.22
+  },
+  "GRAVEBLAST": {
+    "score": 2.3144,
+    "confidence": 0.6064,
+    "offers": 3.0,
+    "picks": 2.0,
+    "rating": 1584.72
+  },
+  "DEATHS_DOOR": {
+    "score": 1.7735,
+    "confidence": 0.5067,
+    "offers": 2.0,
+    "picks": 0,
+    "rating": 1439.84
+  },
+  "__meta__": {
+    "global_pick_rate": 0.3333,
+    "global_win_rate": 0.4167
+  },
+  "__build_meta__": {
+    "target_build": "v0.100.0",
+    "included_builds": [
+      "v0.100.0"
+    ],
+    "legacy_builds": [
+      "v0.98.2",
+      "v0.98.3",
+      "v0.99.1"
+    ],
+    "strategy": "latest_only"
+  }
+}

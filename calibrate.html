@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>STS2 Tracker - UI 위치 조정</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #111; color: #eee; font-family: -apple-system, sans-serif; }
+.container { display: flex; height: 100vh; }
+.preview {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+.preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.preview-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.sidebar {
+    width: 280px;
+    background: #1a1a1a;
+    padding: 16px;
+    overflow-y: auto;
+    border-left: 1px solid #333;
+}
+h2 { font-size: 14px; color: #fbbf24; margin-bottom: 12px; }
+h3 { font-size: 12px; color: #888; margin: 12px 0 6px; text-transform: uppercase; }
+
+.badge {
+    position: absolute;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #fbbf24;
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 100;
+    user-select: none;
+    box-shadow: 0 0 15px rgba(251,191,36,0.3);
+}
+.badge.dragging { cursor: grabbing; opacity: 0.8; }
+.badge .star { color: #fbbf24; }
+
+.anchor-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: red;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    pointer-events: none;
+}
+
+.control { margin-bottom: 8px; }
+.control label { font-size: 11px; color: #aaa; display: block; margin-bottom: 2px; }
+.control input[type=number] {
+    width: 100%;
+    background: #222;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.control .val { font-size: 11px; color: #666; }
+
+button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    background: #fbbf24;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+}
+button:hover { background: #f59e0b; }
+button.secondary {
+    background: #333;
+    color: #ccc;
+}
+button.secondary:hover { background: #444; }
+
+.status { font-size: 11px; color: #666; margin-top: 8px; text-align: center; }
+.offset-display {
+    background: #222;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 8px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #4ade80;
+    word-break: break-all;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="preview" id="preview">
+        <img id="screenshot" src="" alt="게임 화면 로딩 중...">
+        <div id="elements"></div>
+    </div>
+    <div class="sidebar">
+        <h2>STS2 UI 위치 조정</h2>
+        <p style="font-size:11px;color:#888;margin-bottom:12px;">
+            배지를 드래그해서 원하는 위치로 이동하세요.<br>
+            빨간 점 = 서버 anchor 위치 (선택지 중앙)
+        </p>
+
+        <button onclick="refreshScreenshot()">📸 스크린샷 새로고침</button>
+        <button class="secondary" onclick="toggleAutoRefresh()">🔄 자동 새로고침: <span id="autoLabel">OFF</span></button>
+
+        <h3>이벤트 배지 오프셋</h3>
+        <div class="control">
+            <label>X 오프셋 (anchor 기준, %)</label>
+            <input type="number" id="offsetX" value="-25" step="1" onchange="updateBadges()">
+        </div>
+        <div class="control">
+            <label>Y 오프셋 (anchor 기준, %)</label>
+            <input type="number" id="offsetY" value="0" step="0.5" onchange="updateBadges()">
+        </div>
+
+        <button onclick="saveOffsets()">💾 오프셋 저장</button>
+
+        <div class="offset-display" id="offsetResult"></div>
+        <div class="status" id="status">서버 연결 대기...</div>
+    </div>
+</div>
+
+<script>
+let ws;
+let lastData = null;
+let autoRefresh = false;
+let autoTimer = null;
+let imgRect = null;
+let dragState = null;
+
+const screenshot = document.getElementById('screenshot');
+const elements = document.getElementById('elements');
+const preview = document.getElementById('preview');
+
+function connect() {
+    ws = new WebSocket('ws://127.0.0.1:9999/ws');
+    ws.onopen = () => {
+        document.getElementById('status').textContent = '서버 연결됨';
+        ws.send('scan');
+    };
+    ws.onmessage = (e) => {
+        lastData = JSON.parse(e.data);
+        updateBadges();
+    };
+    ws.onclose = () => {
+        document.getElementById('status').textContent = '연결 끊김, 재연결...';
+        setTimeout(connect, 3000);
+    };
+}
+
+function refreshScreenshot() {
+    fetch('/api/screenshot')
+        .then(r => r.blob())
+        .then(blob => {
+            screenshot.src = URL.createObjectURL(blob);
+            screenshot.onload = () => {
+                updateBadges();
+            };
+        })
+        .catch(() => {
+            document.getElementById('status').textContent = '스크린샷 실패';
+        });
+}
+
+function toggleAutoRefresh() {
+    autoRefresh = !autoRefresh;
+    document.getElementById('autoLabel').textContent = autoRefresh ? 'ON' : 'OFF';
+    if (autoRefresh) {
+        autoTimer = setInterval(refreshScreenshot, 2000);
+    } else {
+        clearInterval(autoTimer);
+    }
+}
+
+function getImageRect() {
+    const img = screenshot;
+    if (!img.naturalWidth) return null;
+    const containerW = preview.clientWidth;
+    const containerH = preview.clientHeight;
+    const imgAspect = img.naturalWidth / img.naturalHeight;
+    const containerAspect = containerW / containerH;
+
+    let renderW, renderH, offsetX, offsetY;
+    if (imgAspect > containerAspect) {
+        renderW = containerW;
+        renderH = containerW / imgAspect;
+        offsetX = 0;
+        offsetY = (containerH - renderH) / 2;
+    } else {
+        renderH = containerH;
+        renderW = containerH * imgAspect;
+        offsetX = (containerW - renderW) / 2;
+        offsetY = 0;
+    }
+    return { x: offsetX, y: offsetY, w: renderW, h: renderH };
+}
+
+function updateBadges() {
+    if (!lastData) return;
+    const rect = getImageRect();
+    if (!rect) return;
+
+    const ox = parseFloat(document.getElementById('offsetX').value) || 0;
+    const oy = parseFloat(document.getElementById('offsetY').value) || 0;
+
+    let html = '';
+
+    // 이벤트 선택지
+    const evt = lastData.event_recommendation;
+    if (evt && evt.options) {
+        evt.options.forEach((option, i) => {
+            const anchor = option.screen_anchor;
+            if (!anchor) return;
+
+            // 앵커 빨간 점
+            const dotX = rect.x + anchor.x * rect.w;
+            const dotY = rect.y + anchor.y * rect.h;
+            html += `<div class="anchor-dot" style="left:${dotX}px;top:${dotY}px;"></div>`;
+
+            // 배지
+            const isBest = i === evt.best_idx;
+            const bx = rect.x + (anchor.x * 100 + ox) / 100 * rect.w;
+            const by = rect.y + (anchor.y * 100 + oy) / 100 * rect.h;
+            const reasons = (option.reasons || []).join(' · ');
+
+            html += `<div class="badge" data-idx="${i}" style="left:${bx}px;top:${by}px;transform:translateY(-50%);">`;
+            if (isBest) html += '<span class="star">★</span>';
+            html += `<span>${option.score.toFixed(1)}</span>`;
+            html += `<span style="font-size:10px;color:#ccc;font-weight:400;">${reasons}</span>`;
+            html += '</div>';
+        });
+    }
+
+    // 카드 보상
+    const recs = lastData.recommendations || [];
+    if (recs.length > 0) {
+        recs.forEach((card, i) => {
+            const isBest = i === lastData.best_idx;
+            html += `<div class="badge" style="right:20px;top:${30 + i * 40}px;border-color:${isBest ? '#fbbf24' : '#555'};">`;
+            if (isBest) html += '<span class="star">★</span>';
+            html += `<span>${card.name} ${card.score.toFixed(1)}</span>`;
+            html += '</div>';
+        });
+    }
+
+    elements.innerHTML = html;
+
+    // 드래그 가능하게
+    elements.querySelectorAll('.badge').forEach(badge => {
+        badge.addEventListener('mousedown', startDrag);
+    });
+
+    document.getElementById('offsetResult').textContent =
+        `X: ${ox}%, Y: ${oy}%\n` +
+        `CSS: left: ${ox}%, top: anchor.y + ${oy}%`;
+}
+
+function startDrag(e) {
+    e.preventDefault();
+    const badge = e.currentTarget;
+    const rect = getImageRect();
+    if (!rect) return;
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startLeft = parseFloat(badge.style.left);
+    const startTop = parseFloat(badge.style.top);
+
+    badge.classList.add('dragging');
+
+    function onMove(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        badge.style.left = (startLeft + dx) + 'px';
+        badge.style.top = (startTop + dy) + 'px';
+
+        // 오프셋 역계산
+        const newLeft = startLeft + dx;
+        const newTop = startTop + dy;
+        const pctX = ((newLeft - rect.x) / rect.w * 100);
+        const pctY = ((newTop - rect.y) / rect.h * 100);
+
+        // anchor 기준 오프셋
+        const evt = lastData?.event_recommendation;
+        if (evt && evt.options) {
+            const idx = parseInt(badge.dataset.idx);
+            if (!isNaN(idx) && evt.options[idx]) {
+                const anchor = evt.options[idx].screen_anchor;
+                const newOx = (pctX - anchor.x * 100).toFixed(1);
+                const newOy = (pctY - anchor.y * 100).toFixed(1);
+                document.getElementById('offsetX').value = newOx;
+                document.getElementById('offsetY').value = newOy;
+                document.getElementById('offsetResult').textContent =
+                    `X: ${newOx}%, Y: ${newOy}%`;
+            }
+        }
+    }
+
+    function onUp() {
+        badge.classList.remove('dragging');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        updateBadges();
+    }
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+}
+
+function saveOffsets() {
+    const ox = parseFloat(document.getElementById('offsetX').value) || 0;
+    const oy = parseFloat(document.getElementById('offsetY').value) || 0;
+    fetch('/api/save-offsets', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({event_badge_x: ox, event_badge_y: oy})
+    })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('status').textContent = '저장 완료! ' + JSON.stringify(data);
+    });
+}
+
+// 초기화
+connect();
+refreshScreenshot();
+</script>
+</body>
+</html>

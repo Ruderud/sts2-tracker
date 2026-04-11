@@ -4,6 +4,11 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "Starting STS2 Tracker..."
 
+# 기존 인스턴스 정리
+pkill -f "$DIR/server.py" 2>/dev/null || true
+pkill -f "$DIR/overlay/STS2Overlay" 2>/dev/null || true
+sleep 0.5
+
 # Python 서버 시작
 source "$DIR/.venv/bin/activate"
 python "$DIR/server.py" &
