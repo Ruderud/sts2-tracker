@@ -1443,7 +1443,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScri
     }
 
     @objc func manualScan() {
-        webView.evaluateJavaScript("ws.send('scan')", completionHandler: nil)
+        webView.evaluateJavaScript("try { ws && ws.readyState === 1 && ws.send('scan') } catch(e) {}", completionHandler: nil)
     }
 
     @objc func moreTransparent() {
@@ -1459,7 +1459,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScri
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
+        return false
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
